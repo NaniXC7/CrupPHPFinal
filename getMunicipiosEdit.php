@@ -2,7 +2,7 @@
 
 require("conexion.php");
 
-$idDepartamento = $conexion -> real_escape_string($_GET['id_departamento']);
+$idDepartamento = $conexion -> real_escape_string($_POST['id_departamento']);
 
 $querymuni = $conexion->query("SELECT idmunicipio, municipio FROM municipio WHERE departamentos_iddepartamentos	 = '$idDepartamento' ORDER BY municipio ASC");
 

@@ -91,7 +91,7 @@ if($_POST){
             
         </select> 
         
-
+        <script src="js/peticionesEdit.js"></script>
 
         </div>
         <div class="modal-footer">
@@ -99,7 +99,7 @@ if($_POST){
           <button type="submit" class="btn btn-primary">Guardar</button>
         </div>
       </form>
-      <script src="js/peticionesEdit.js"></script>
+
 
 
 
