@@ -1,5 +1,5 @@
 <?php
-$url_base = "http://localhost/phpDefinitivo/";
+$url_base = "http://localhost/CrupPHPFinal/";
 ?>
 
 <!doctype html>

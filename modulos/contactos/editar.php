@@ -8,14 +8,20 @@ $alert = "";
 if(isset($_GET['idpersona'])){
   $txtid = $_GET['idpersona'];
 
-  $queryPersona = $conexion -> query("SELECT * FROM personas WHERE idpersonas = '$txtid'");
+  $queryPersona = $conexion -> query("SELECT p.idpersonas, p.nombre, p.telefono, p.fechaNacimiento, p.correo, d.departamento, m.municipio, p.iddepartamentos, p.idmunicipio from personas p
+                                      INNER JOIN departamentos d
+                                      ON p.iddepartamentos = d.iddepartamentos
+                                      INNER JOIN municipio m
+                                      ON p.idmunicipio = m.idmunicipio WHERE idpersonas = '$txtid'");
   $datosPersona = mysqli_fetch_array($queryPersona);
   $nombre = $datosPersona['nombre'];
   $telefono = $datosPersona['telefono'];
   $fecha = $datosPersona['fechaNacimiento'];
   $correo = $datosPersona['correo'];
-  $departamento = $datosPersona['iddepartamentos'];
-  $municipio = $datosPersona['idmunicipio'];
+  $departamentoName = $datosPersona['departamento'];
+  $municipioName = $datosPersona['municipio'];
+  $departamentoid = $datosPersona['iddepartamentos'];
+  $municipioid = $datosPersona['idmunicipio'];
 }
 
 
@@ -36,8 +42,8 @@ if($_POST){
       $telefono = $_POST['telefono'];
       $fecha = $_POST['fecha'];
       $correo = $_POST['correo'];
-      $departamento = $_POST['departamentos'];
-      $municipio = $_POST['municipio'];
+      $departamento = $_POST['departamentosEdit'];
+      $municipio = $_POST['municipioEdit'];
 
  
       $queryCorreo = $conexion -> query("SELECT * FROM personas WHERE correo = '$correo' ");
@@ -47,8 +53,8 @@ if($_POST){
         $alert = "El correo ya existe";
       }else{
         
-        $queryAdd = $conexion -> query("INSERT INTO `personas`(`nombre`, `telefono`, `fechaNacimiento`, `correo`, `iddepartamentos`, `idmunicipio`) 
-        VALUES ('$nombre', '$telefono', '$fecha', '$correo', '$departamento', '$municipio')");
+        $queryAdd = $conexion -> query("UPDATE personas SET nombrec= '$nombre', telefono = '$telefono', fechaNacimiento = '$fecha',
+        correo = '$correo', iddepartamentos = '$departamento', idmunicipio = '$municipio'");
         header("location:index.php");
         
       }
@@ -81,17 +87,26 @@ if($_POST){
         <input type="email" class = "form-control" placeholder = "Ingresa el correo" value ="<?php echo $correo ?>" name = "correo" id ="correo" required >
         <label>Departamento</label>
         <select class ="form-control" name="departamentosEdit" id ="departamentosEdit" value ="<?php echo $departamento ?>" required> 
+          <option value="<?php echo $departamentoid ?>" selected><?php echo $departamentoName ?></option>
+
             <?php
-                while($dptos = mysqli_fetch_array($querydtos)){?>
-                    <option value="<?php echo $dptos['iddepartamentos']?>"><?php echo $dptos['departamento'] ?></option>
-                <?php }?>
+                while($dptos = mysqli_fetch_array($querydtos)){
+                    if($departamentoName == $dptos['departamento']){
+                      continue;?>
+                      
+            <?php }else{?>
+              <option value="<?php echo $dptos['iddepartamentos'] ?>"><?php echo $dptos['departamento'] ?></option>
+
+              <?php }?>
+            <?php }?>
         </select>
         <label>Municipio</label>
-        <select class ="form-control" name="municipioEdit" id="municipioEdit" value ="<?php echo $municipio ?>" required>
-            
+        <select class ="form-control" name="municipioEdit" id="municipioEdit" required value ="<?php echo $municipio ?>">
+        <!-- value ="<?php //echo $municipio ?>" -->
         </select> 
         
-        <script src="js/peticionesEdit.js"></script>
+        <script src="../../js/peticionesEdit.js"></script>
+
 
         </div>
         <div class="modal-footer">
