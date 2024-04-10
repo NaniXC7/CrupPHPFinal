@@ -29,6 +29,11 @@ if(isset($_GET['idpersona'])){
 
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#create">
 Nuevo</button>
+<a href="API/Consumiendo.php" class = "btn btn-secondary">API</a>
+
+
+
+<br><br>
 
 <div
     class="table-responsive"

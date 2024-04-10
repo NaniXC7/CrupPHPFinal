@@ -37,7 +37,7 @@ if($_POST){
     if(empty($_POST['nombre']) || empty($_POST['telefono']) || empty($_POST['fecha']) || empty($_POST['correo'])){
         $alert = "Todos los campos son requeridos";
     }else{
- 
+      //$id = $_POST['idpersona'];
       $nombre = $_POST['nombre'];
       $telefono = $_POST['telefono'];
       $fecha = $_POST['fecha'];
@@ -46,16 +46,22 @@ if($_POST){
       $municipio = $_POST['municipioEdit'];
 
  
-      $queryCorreo = $conexion -> query("SELECT * FROM personas WHERE correo = '$correo' ");
+      $queryCorreo = $conexion -> query("SELECT * FROM personas WHERE correo = '$correo' AND idpersonas != '$txtid' ");
       $resultadoq = mysqli_num_rows($queryCorreo);
 
       if($resultadoq > 0){
         $alert = "El correo ya existe";
       }else{
         
-        $queryAdd = $conexion -> query("UPDATE personas SET nombrec= '$nombre', telefono = '$telefono', fechaNacimiento = '$fecha',
-        correo = '$correo', iddepartamentos = '$departamento', idmunicipio = '$municipio'");
-        header("location:index.php");
+        if(empty($_POST['departamentosEdit']) && empty($_POST['municipioEdit'])){
+          $queryAdd = $conexion -> query("UPDATE personas SET nombre= '$nombre', telefono = '$telefono', fechaNacimiento = '$fecha',
+        correo = '$correo', iddepartamentos = '$departamentoid', idmunicipio = '$municipioid' WHERE idpersonas = '$txtid'");
+        header("location:../../index.php");
+        }else{
+          $queryAdd = $conexion -> query("UPDATE personas SET nombre= '$nombre', telefono = '$telefono', fechaNacimiento = '$fecha',
+        correo = '$correo', iddepartamentos = '$departamento', idmunicipio = '$municipio' WHERE idpersonas = '$txtid'");
+        header("location:../../index.php");
+        }
         
       }
         
@@ -86,23 +92,17 @@ if($_POST){
         <label>Correo</label>
         <input type="email" class = "form-control" placeholder = "Ingresa el correo" value ="<?php echo $correo ?>" name = "correo" id ="correo" required >
         <label>Departamento</label>
-        <select class ="form-control" name="departamentosEdit" id ="departamentosEdit" value ="<?php echo $departamento ?>" required> 
-          <option value="<?php echo $departamentoid ?>" selected><?php echo $departamentoName ?></option>
-
+        <p><?php echo $departamentoName?></p><select class ="form-control" name="departamentosEdit" id ="departamentosEdit"> 
+            <option value="">Seleccionar</option>
             <?php
-                while($dptos = mysqli_fetch_array($querydtos)){
-                    if($departamentoName == $dptos['departamento']){
-                      continue;?>
-                      
-            <?php }else{?>
-              <option value="<?php echo $dptos['iddepartamentos'] ?>"><?php echo $dptos['departamento'] ?></option>
-
-              <?php }?>
-            <?php }?>
+                while($dptos = mysqli_fetch_array($querydtos)){?>
+                    <option value="<?php echo $dptos['iddepartamentos']?>"><?php echo $dptos['departamento'] ?></option>
+                <?php }?>
         </select>
         <label>Municipio</label>
-        <select class ="form-control" name="municipioEdit" id="municipioEdit" required value ="<?php echo $municipio ?>">
-        <!-- value ="<?php //echo $municipio ?>" -->
+        <p><?php echo $municipioName?></p><select class ="form-control" name="municipioEdit" id="municipioEdit">
+            <option value="">Seleccionar</option>
+            
         </select> 
         
         <script src="../../js/peticionesEdit.js"></script>
